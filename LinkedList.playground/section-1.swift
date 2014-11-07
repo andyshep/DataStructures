@@ -68,11 +68,11 @@ class LinkedList<T: Equatable> {
     func describe() {
         var node = head
         while node?.next != nil {
-            println(node?.value)
+            print("\(node!.value) ")
             node = node?.next
         }
         
-        println(node?.value)
+        println(node!.value)
         println("-----")
     }
 }
