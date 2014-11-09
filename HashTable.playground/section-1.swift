@@ -2,67 +2,98 @@
 //
 // Basic Operations
 //
-// value(key) -> Int
-// setValue(value, key)
+// value(key:Int) -> Either<T> -- Returns an Either enum associated with the key.
+// setValue(value:T, forKey key:Int) -- Associates a value with a given key.
 
 import Foundation
 
-class Node {
-    var key: Int
-    var value: Int
+enum Either<T: Equatable> {
+    case None
+    case Some(Node<T>)
     
-    init(key:Int, value:Int) {
+    func describe() {
+        switch self {
+        case .Some(let obj):
+            println("Object with value: \(obj.value)")
+        case .None:
+            println("Nothing, no value.")
+        }
+    }
+}
+
+class Node<T: Equatable> {
+    var key: Int
+    var value: T
+    
+    init(key:Int, value:T) {
         self.key = key
         self.value = value
     }
 }
 
-class HashTable {
-    private let size = 1021
+class HashTable<T: Equatable> {
+    var table = [Either<T>]()
     
-    var table = NSMutableArray()
+    private let size = 1021
     
     init() {
         for index in 0..<size {
-            table[index] = NSNull()
+            table.append(.None)
         }
     }
     
-    func value(key:Int) -> Int {
-        var hash = key % size
-        
-        while (table[hash] is Node && (table[hash] as Node).key != key) {
-            hash = (hash + 1) % size
+    func value(key:Int) -> Either<T> {
+        let hash = hashForKey(key)
+        var value = table[hash]
+        switch value {
+        case .Some(let obj):
+            return .Some(obj)
+        case .None:
+            return .None
         }
-        
-        if (table[hash] is NSNull) {
-            return NSNotFound
-        }
-        else {
-            if let node = table[hash] as? Node {
-                return node.value
+    }
+    
+    func setValue(value:T, forKey key:Int) {
+        let node = Node(key: key, value: value)
+        let hash = hashForKey(key)
+        table[hash] = .Some(node)
+    }
+    
+    func hashForKey(key:Int) -> Int {
+        let hash = key % size
+        return hashForKey(key, usingLinearProbeHash: hash)
+    }
+    
+    func hashForKey(key:Int, usingLinearProbeHash hash:Int) -> Int {
+        let value = table[hash]
+        switch value {
+        case .Some(let obj):
+            if obj.key == key {
+                return hash
             }
-            
-            return NSNotFound
+            else {
+                var newHash = (hash + 1) % size
+                return hashForKey(key, usingLinearProbeHash: newHash)
+            }
+        case .None:
+            return hash
         }
-    }
-    
-    func setValue(value:Int, forKey key:Int) {
-        var hash = key % size
-        
-        while (table[hash] is Node && (table[hash] as Node).key != key) {
-            hash = (hash + 1) % size
-        }
-        
-        table[hash] = Node(key: key, value: value)
     }
 }
 
-var hashTable = HashTable()
+var hashTable = HashTable<Int>()
 
-hashTable.setValue(1044, forKey: 10)
-hashTable.setValue(23023, forKey: 20)
-hashTable.setValue(2088, forKey: 30)
+hashTable.setValue(1010101, forKey: 88)
+hashTable.setValue(2099823, forKey: 42)
 
-let value = hashTable.value(30)
-println(value)
+hashTable.value(88).describe()
+hashTable.value(42).describe()
+hashTable.value(101).describe()
+
+
+var hashTable2 = HashTable<String>()
+
+hashTable2.setValue("Garfield", forKey: 99)
+
+hashTable2.value(99).describe()
+hashTable2.value(404).describe()

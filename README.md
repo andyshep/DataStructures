@@ -4,4 +4,4 @@ Data Structures written in Swift. Built for the [Code Fellows iOS Accelerator](h
 
 * Stack
 * Linked List
-* HashTable
+* Hash Table
