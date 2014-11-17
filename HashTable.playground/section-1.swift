@@ -5,18 +5,16 @@
 // value(key:Int) -> Either<T> -- Returns an Either enum associated with the key.
 // setValue(value:T, forKey key:Int) -- Associates a value with a given key.
 
-import Foundation
-
-enum Either<T: Equatable> {
+enum Either<T: Equatable> : Printable {
     case None
     case Some(Node<T>)
     
-    func describe() {
+    var description: String {
         switch self {
-        case .Some(let obj):
-            println("Object with value: \(obj.value)")
-        case .None:
-            println("Nothing, no value.")
+            case .Some(let obj):
+                return "\(obj.value)"
+            case .None:
+                return "Either<T>: Nothing, no value."
         }
     }
 }
@@ -86,14 +84,16 @@ var hashTable = HashTable<Int>()
 hashTable.setValue(1010101, forKey: 88)
 hashTable.setValue(2099823, forKey: 42)
 
-hashTable.value(88).describe()
-hashTable.value(42).describe()
-hashTable.value(101).describe()
-
+hashTable.value(88).description
+hashTable.value(42).description
+hashTable.value(101).description
 
 var hashTable2 = HashTable<String>()
 
 hashTable2.setValue("Garfield", forKey: 99)
 
-hashTable2.value(99).describe()
-hashTable2.value(404).describe()
+hashTable2.value(99).description
+hashTable2.value(404).description
+
+hashTable2.value(99).description
+hashTable2.value(404).description

@@ -6,8 +6,6 @@
 // pop(value) -- Pops a value off the top of the Stack
 // peek(value) -- Return the value off the top of the Stack, without Popping
 
-import Foundation
-
 class Stack<T: Equatable> {
     var items: [T]? = []
     

@@ -6,8 +6,6 @@
 // insertHead(value) -- Inserts a new value at the start of the List
 // remove(value) -- Removes the first Node matching value from the List
 
-import Foundation
-
 class Node<T: Equatable> {
     var value: T
     var next: Node? = nil
@@ -17,7 +15,7 @@ class Node<T: Equatable> {
     }
 }
 
-class LinkedList<T: Equatable> {
+class LinkedList<T: Equatable> : Printable {
     var head: Node<T>? = nil
     
     func insert(value:T) {
@@ -56,24 +54,23 @@ class LinkedList<T: Equatable> {
             
             if node?.value == value {
                 if node?.next != nil {
-                    previousNode?.next = nil
+                    previousNode?.next = node?.next
                 }
                 else {
-                    previousNode?.next = node?.next
+                    previousNode?.next = nil
                 }
             }
         }
     }
     
-    func describe() {
+    var description : String {
         var node = head
+        var description = "\(node!.value)"
         while node?.next != nil {
-            print("\(node!.value) ")
             node = node?.next
+            description += " \(node!.value)"
         }
-        
-        println(node!.value)
-        println("-----")
+        return description
     }
 }
 
@@ -82,13 +79,25 @@ var linkedList = LinkedList<Int>()
 linkedList.insert(10)
 linkedList.insert(20)
 
-linkedList.describe()
+linkedList.description
 
 linkedList.insertHead(99)
 
-linkedList.describe()
+linkedList.description
 
 linkedList.remove(20)
 linkedList.remove(10)
 
-linkedList.describe()
+linkedList.description
+
+var linkedList2 = LinkedList<String>()
+
+linkedList2.insert("Fred")
+linkedList2.insert("Jed")
+linkedList2.insert("Ned")
+linkedList2.insert("Ted")
+linkedList2.insert("Red")
+
+linkedList2.remove("Ned")
+
+linkedList2.description
